@@ -1,4 +1,12 @@
+from collections import Counter
+import time
+
 def main():
+    start = time.time()
+    run()
+    print(f"Time Taken: {time.time() - start}")
+
+def run():
     with open("input.txt", "r") as input_file:
         input_list = input_file.readlines()
 
@@ -14,7 +22,6 @@ def main():
     right = sorted(right)
 
     distance = 0
-    similarity = 0
     for i in range(len(left)):
         l = left[i]
         r = right[i]
@@ -24,8 +31,8 @@ def main():
         else:
             distance += r - l
 
-        count = right.count(l)
-        similarity += l * count
+    right_counter = Counter(right)
+    similarity =  sum(l * right_counter[l] for l in left)
 
     print("distance:", distance)
     print("similarity:", similarity)
