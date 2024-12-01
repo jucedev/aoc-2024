@@ -1,23 +1,40 @@
 from collections import Counter
+import random
 import time
 
 def main():
+    print(" ----- 50000 ")
     start = time.time()
-    run()
+    left, right = get_input(50000)
+    run(left, right)
+    print(f"Time Taken: {time.time() - start}")
+    
+    print(" ----- 250000 ")
+    start = time.time()
+    left, right = get_input(250000)
+    run(left, right)
     print(f"Time Taken: {time.time() - start}")
 
-def run():
-    with open("input.txt", "r") as input_file:
-        input_list = input_file.readlines()
+    print(" ----- 1000000 ")
+    start = time.time()
+    left, right = get_input(1000000)
+    run(left, right)
+    print(f"Time Taken: {time.time() - start}")
 
-    left = []
-    right = []
+    print(" ----- 10000000 ")
+    start = time.time()
+    left, right = get_input(10000000)
+    run(left, right)
+    print(f"Time Taken: {time.time() - start}")
 
-    for row in input_list:
-        split = row.split("   ")
-        left.append(int(split[0]))
-        right.append(int(split[1].rstrip()))
+    print(" ----- ")
 
+def get_input(n):
+    left = [random.randrange(10000, 99999, 1) for i in range(n)]
+    right = [random.randrange(10000, 99999, 1) for i in range(n)]
+    return left, right
+
+def run(left, right):
     left = sorted(left)
     right = sorted(right)
 
