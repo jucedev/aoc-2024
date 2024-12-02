@@ -5,15 +5,26 @@ internal static class Program
     public static void Main(string[] args)
     {
         var report = File.ReadAllLines("input.txt").ToList();
-        var score = CalculateSafety(report);
-        Console.WriteLine($"Safety Score: {score}");
+        var strictScore = CalculateSafety(report, false);
+        var looseScore = CalculateSafety(report, true);
+        Console.WriteLine($"Strict Score: {strictScore}");
+        Console.WriteLine($"Loose Score: {looseScore}");
     }
 
-    private static int CalculateSafety(List<string> input)
+    private static int CalculateSafety(List<string> input, bool validateLoosely)
     {
         return input
             .Select(line => line.Split(" ").Select(int.Parse).ToList())
-            .Sum(Validate);
+            .Sum(validateLoosely ? LooselyValidate : Validate);
+    }
+
+    private static int LooselyValidate(List<int> levels)
+    {
+        if (Validate(levels) == 1) return 1;
+        
+        return levels
+            .Select((_, i) => levels.Take(i).Concat(levels.Skip(i + 1)).ToList())
+            .Any(reducedList => Validate(reducedList) == 1) ? 1 : 0;
     }
 
     private static int Validate(List<int> levels)
