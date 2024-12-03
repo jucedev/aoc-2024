@@ -18,16 +18,25 @@ const validInteger = (str) => {
 };
 const getMultiplications = (input) => {
     let total = 0;
+    let paused = false;
     const parts = input.split("mul(");
     for (let i = 1; i < parts.length; i++) {
         let part = parts[i];
         if (!part.includes(")"))
             continue;
-        const params = part.slice(0, part.indexOf(")")).split(",");
-        if (params.length === 2 && validInteger(params[0]) && validInteger(params[1])) {
-            const num1 = Number(params[0]);
-            const num2 = Number(params[1]);
-            total += num1 * num2;
+        if (!paused) {
+            const params = part.slice(0, part.indexOf(")")).split(",");
+            if (params.length === 2 && validInteger(params[0]) && validInteger(params[1])) {
+                const num1 = Number(params[0]);
+                const num2 = Number(params[1]);
+                total += num1 * num2;
+            }
+        }
+        if (paused && part.includes("do()")) {
+            paused = false;
+        }
+        if (!paused && part.includes("don't()")) {
+            paused = true;
         }
     }
     return total;

@@ -19,7 +19,9 @@ const validInteger = (str: string): boolean => {
 }
 
 const getMultiplications = (input: string): number => {
+    let paused = false;
     let total = 0;
+
     const parts = input.split("mul(");
 
     for (let i = 1; i < parts.length; i++) {
@@ -27,13 +29,23 @@ const getMultiplications = (input: string): number => {
         
         if (!part.includes(")")) continue;
 
-        const params = part.slice(0, part.indexOf(")")).split(",");
+        if (!paused) {
+            const params = part.slice(0, part.indexOf(")")).split(",");
+    
+            if (params.length === 2 && validInteger(params[0]) && validInteger(params[1])) {
+                const num1 = Number(params[0]);
+                const num2 = Number(params[1]);
+    
+                total += num1 * num2;
+            }
+        }
 
-        if (params.length === 2 && validInteger(params[0]) && validInteger(params[1])) {
-            const num1 = Number(params[0]);
-            const num2 = Number(params[1]);
+        if (paused && part.includes("do()")) {
+            paused = false;
+        }
 
-            total += num1 * num2;
+        if (!paused && part.includes("don't()")) {
+            paused = true;
         }
     }
 
