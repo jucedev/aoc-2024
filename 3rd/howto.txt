@@ -1,0 +1,5 @@
+To compile the contents of src
+npx tsc
+
+To run the application
+node dist/main.js
